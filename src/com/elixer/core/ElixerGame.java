@@ -1,12 +1,17 @@
 package com.elixer.core;
 
+import com.elixer.core.Display.Model.Mesh;
 import com.elixer.core.Display.Window;
 import com.elixer.core.Util.Logger;
+import com.elixer.core.Util.Util;
+import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.*;
-/**
- * Created by aweso on 7/20/2017.
- */
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+
 public abstract class ElixerGame {
 
     private String title;
@@ -14,10 +19,6 @@ public abstract class ElixerGame {
 
     private boolean isValid;
     private boolean isRunning;
-
-    public static void main(String[] args) {
-
-    }
 
     public ElixerGame(String title) {
         this.title = title;
@@ -36,22 +37,41 @@ public abstract class ElixerGame {
 
     private void run() {
         isRunning = true;
+        GL.createCapabilities();
+        float[] data = new float[]
+                {-1.0f, -1.0f, 0.0f,
+                        1.0f, -1.0f, 0.0f,
+                        0.0f,  1.0f, 0.0f};
 
+        Mesh mesh = new Mesh(data, new int[]{});
+        glBindVertexArray(mesh.getVaoID());
+        glEnableVertexAttribArray(0);
         while(isRunning) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            glBindVertexArray(mesh.getVaoID());
+            glEnableVertexAttribArray(0);
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+
+            currWindow.update();
+
+            if(currWindow.shouldWindowClose()) {
+                stop();
             }
-            Logger.println("Test for Errors.", Logger.Levels.ERROREND);
         }
+        glDisableVertexAttribArray(0);
+        glBindVertexArray(0);
     }
 
     private void end() {
+        onEnd();
+
         endSystems();
     }
 
     private void init() {
+        currWindow = new Window(title);
+
         onPreInit();
 
         onInit();
@@ -65,10 +85,14 @@ public abstract class ElixerGame {
 
     protected abstract void onInit();
 
+    protected abstract void onEnd();
+
     private void initSystems() {
         if(!glfwInit()) {
-            throw new IllegalStateException("GLFW failed to init.");
+            Logger.println("ELIXER ERROR: GLFW was not able to init. Ending.", Logger.Levels.ERROREND);
         }
+
+        Util.init();
     }
 
     private void endSystems() {

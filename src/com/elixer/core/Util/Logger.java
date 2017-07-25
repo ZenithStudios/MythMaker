@@ -45,5 +45,4 @@ public class Logger {
         println(message, Levels.INFO);
     }
 
-
 }
