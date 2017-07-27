@@ -1,6 +1,7 @@
 package com.elixer.core;
 
 import com.elixer.core.Display.Model.Mesh;
+import com.elixer.core.Display.Shaders.ShaderProgram;
 import com.elixer.core.Display.Window;
 import com.elixer.core.Util.Logger;
 import com.elixer.core.Util.Util;
@@ -46,11 +47,17 @@ public abstract class ElixerGame {
         Mesh mesh = new Mesh(data, new int[]{});
         glBindVertexArray(mesh.getVaoID());
         glEnableVertexAttribArray(0);
+
+        ShaderProgram prog = new ShaderProgram("vertex.glsl", "fragment.glsl");
+
         while(isRunning) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+            prog.use();
+
             glBindVertexArray(mesh.getVaoID());
             glEnableVertexAttribArray(0);
+
             glDrawArrays(GL_TRIANGLES, 0, 3);
 
             currWindow.update();
