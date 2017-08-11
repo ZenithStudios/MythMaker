@@ -49,4 +49,12 @@ public class Window {
     public boolean shouldWindowClose() {
         return glfwWindowShouldClose(windowID);
     };
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
 }

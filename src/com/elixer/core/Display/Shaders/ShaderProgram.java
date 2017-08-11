@@ -3,21 +3,26 @@ package com.elixer.core.Display.Shaders;
 import com.elixer.core.Util.Logger;
 import com.elixer.core.Util.ResourceType;
 import com.elixer.core.Util.Util;
+import org.joml.Matrix4f;
+import org.lwjgl.BufferUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL32.*;
-import static org.lwjgl.opengl.GL40.*;
+import static org.lwjgl.opengl.GL40.glUniform1d;
 
 public class ShaderProgram {
 
-    private int programID, fragmentID, vertexID;
+    private int programID;
+    private ArrayList<Integer> shaders = new ArrayList<>();
+
+    private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
     public static enum ShaderType {
         FRAGMENT(GL_FRAGMENT_SHADER),
@@ -70,18 +75,30 @@ public class ShaderProgram {
         }
 
         glAttachShader(programID, shader);
-
-        switch (type) {
-            case VERTEX:
-                vertexID = shader;
-                break;
-            case FRAGMENT:
-                fragmentID = shader;
-                break;
-        }
+        shaders.add(shader);
     }
 
     public void use() {
         glUseProgram(programID);
+    }
+
+    public void setUniform(String name, float value) {
+        glUniform1f(glGetUniformLocation(programID, name), value);
+    }
+
+    public void setUniform(String name, double value) {
+        glUniform1d(glGetUniformLocation(programID, name), value);
+    }
+
+    public void setUniform(String name, Matrix4f mat) {
+        glUniformMatrix4fv(glGetUniformLocation(programID, name), false, mat.get(matrixBuffer));
+    }
+
+    public void destroy() {
+        for(int i: shaders) {
+            glDeleteShader(i);
+        }
+
+        glDeleteProgram(programID);
     }
 }

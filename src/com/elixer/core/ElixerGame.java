@@ -3,23 +3,30 @@ package com.elixer.core;
 import com.elixer.core.Display.Model.Mesh;
 import com.elixer.core.Display.Shaders.ShaderProgram;
 import com.elixer.core.Display.Window;
+import com.elixer.core.Entity.*;
 import com.elixer.core.Util.Logger;
 import com.elixer.core.Util.Util;
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL;
+
+import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public abstract class ElixerGame {
 
-    private String title;
-    private static Window currWindow;
+    public Transform camPos = new Transform();
 
-    private boolean isValid;
+    protected String title;
+    protected Window currWindow;
+
+    private float fov = 75f, nearPlane = 0.01f, farPlane = 1000f;
     private boolean isRunning;
+    private Scene currScene;
 
     public ElixerGame(String title) {
         this.title = title;
@@ -39,26 +46,38 @@ public abstract class ElixerGame {
     private void run() {
         isRunning = true;
         GL.createCapabilities();
+
         float[] data = new float[]
-                {-1.0f, -1.0f, 0.0f,
-                        1.0f, -1.0f, 0.0f,
-                        0.0f,  1.0f, 0.0f};
+              {-1.0f, -1.0f, 0.0f,
+                1.0f, -1.0f, 0.0f,
+                0.0f,  1.0f, 0.0f};
+        int[] indecies = new int[]
+              {2, 0, 1};
 
-        Mesh mesh = new Mesh(data, new int[]{});
-        glBindVertexArray(mesh.getVaoID());
-        glEnableVertexAttribArray(0);
+        Entity entity = new Entity("Test1");
+        entity.transform.position.z = -5;
 
-        ShaderProgram prog = new ShaderProgram("vertex.glsl", "fragment.glsl");
+        Mesh mesh = new Mesh(data, indecies);
+
+        entity.addComponent(new MeshRemdererComponent(mesh));
+
+        Scene scene = new Scene("TestScene", this);
+        scene.addEntity(entity);
+        currScene = scene;
 
         while(isRunning) {
+
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            prog.use();
+            //Render Begin
 
-            glBindVertexArray(mesh.getVaoID());
-            glEnableVertexAttribArray(0);
+            for(Entity e: currScene.getEntities()) {
+                for (Component c : e.getComponents()) {
+                    c.onRender();
+                }
+            }
 
-            glDrawArrays(GL_TRIANGLES, 0, 3);
+            //Render End
 
             currWindow.update();
 
@@ -105,4 +124,20 @@ public abstract class ElixerGame {
     private void endSystems() {
         glfwTerminate();
     }
+
+    public Window getCurrentWindow() {
+        return currWindow;
+    }
+
+    public Matrix4f getProjectionMatrix() {
+        Matrix4f matProxy = new Matrix4f().identity();
+        matProxy.perspective(
+            (float) Math.toRadians(fov / 2),
+            (float) getCurrentWindow().getWidth() / (float) getCurrentWindow().getHeight(),
+            nearPlane,
+            farPlane);
+        return matProxy;
+    }
+
+
 }

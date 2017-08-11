@@ -4,9 +4,8 @@ import org.joml.Vector2i;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWVidMode;
 
-import java.io.File;
-import java.net.URL;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -40,16 +39,23 @@ public class Util {
         return buffer;
     }
 
+    public static IntBuffer getIntBuffer(int[] data) {
+        IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
+        buffer.put(data);
+        buffer.flip();
+        return buffer;
+    }
+
     public static Path getResource(String fileName, ResourceType type) {
         if(!type.legal(fileName)) {
             Logger.println("File extention not supported: ." + fileName.split("\\.")[1] + "  Skipping Resource and returning null.");
             return null;
         }
 
-        Path path = Paths.get("src", "res", type.getDir(), fileName);
+        Path path = Paths.get(".","res", type.getDir(), fileName);
 
         if(!path.toFile().exists()) {
-            Logger.println("Could not find file " + fileName + " at dir " + path.toString());
+            Logger.println("Could not find file " + fileName + " at dir " + path.toFile().getAbsolutePath());
             return null;
         }
 

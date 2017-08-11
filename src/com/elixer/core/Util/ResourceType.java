@@ -7,7 +7,8 @@ import java.io.File;
  */
 public enum ResourceType {
     DATA("data", "dat", "txt", "csv"),
-    SHADER("shaders", "glsl");
+    SHADER("shaders", "glsl"),
+    MODEL("models", "obj");
 
     private String dir;
     private String[] extentions;
