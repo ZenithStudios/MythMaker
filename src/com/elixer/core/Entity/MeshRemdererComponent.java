@@ -43,7 +43,7 @@ public class MeshRemdererComponent extends Component {
 
     protected void render() {
         shaderProgram.use();
-        shaderProgram.setUniform("transMat", getEntity().transform.getTransformationMatrix());
+        shaderProgram.setUniform("transMat", getEntity().getTransformationMatrix());
         shaderProgram.setUniform("projMat", getGame().getProjectionMatrix());
         shaderProgram.setUniform("viewMat", getGame().camPos.getRevercedMatrix());
 

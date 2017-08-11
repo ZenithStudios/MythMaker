@@ -7,6 +7,7 @@ import com.elixer.core.Entity.*;
 import com.elixer.core.Util.Logger;
 import com.elixer.core.Util.Util;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
 
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public abstract class ElixerGame {
               {2, 0, 1};
 
         Entity entity = new Entity("Test1");
-        entity.transform.position.z = -5;
+        entity.addPos(0, 0, -5);
 
         Mesh mesh = new Mesh(data, indecies);
 
@@ -68,6 +69,8 @@ public abstract class ElixerGame {
         while(isRunning) {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            camPos.rotation.add(new Vector3f(0, 1, 0));
 
             //Render Begin
 
