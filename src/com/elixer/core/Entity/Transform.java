@@ -37,11 +37,74 @@ public class Transform {
 
     public Matrix4f getRevercedMatrix() {
         matProxy.identity();
-        matProxy.translate(-position.x, -position.y, -position.z);
         matProxy.rotate((float) Math.toRadians(-rotation.x), Ref.X_AXIS);
         matProxy.rotate((float) Math.toRadians(-rotation.y), Ref.Y_AXIS);
         matProxy.rotate((float) Math.toRadians(-rotation.z), Ref.Z_AXIS);
+        matProxy.translate(-position.x, -position.y, -position.z);
         matProxy.scale(scale);
         return matProxy;
+    }
+
+    //ADDERS
+    public void addPos(float x, float y, float z) {
+        position.add(x, y, z);
+    }
+
+    public void addPos(Vector3f trans) {
+        position.add(trans);
+    }
+
+    public void addRot(float x, float y, float z) {
+        rotation.add(x, y, z);
+    }
+
+    public void addRot(Vector3f rot) {
+        rotation.add(rot);
+    }
+
+    public void addScale(float x, float y, float z) {
+        scale.add(x, y, z);
+    }
+
+    public void addScale(Vector3f scale) {
+        scale.add(scale);
+    }
+
+    //SETTERS
+    public void setPos(float x, float y, float z) {
+        position.set(x, y, z);
+    }
+
+    public void setPos(Vector3f trans) {
+        position = trans;
+    }
+
+    public void setRot(float x, float y, float z) {
+        rotation.set(x, y, z);
+    }
+
+    public void setRot(Vector3f rot) {
+        rotation = rot;
+    }
+
+    public void setScale(float x, float y, float z) {
+        scale.set(x, y, z);
+    }
+
+    public void setScale(Vector3f scale) {
+        scale = scale;
+    }
+
+    //GETTERS
+    public Vector3f getPosition() {
+        return position;
+    }
+
+    public Vector3f getScale() {
+        return scale;
+    }
+
+    public Vector3f getRotation() {
+        return rotation;
     }
 }

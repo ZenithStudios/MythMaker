@@ -55,16 +55,19 @@ public abstract class ElixerGame {
         int[] indecies = new int[]
               {2, 0, 1};
 
-        Entity entity = new Entity("Test1");
-        entity.addPos(0, 0, -5);
-
         Mesh mesh = new Mesh(data, indecies);
 
-        entity.addComponent(new MeshRemdererComponent(mesh));
+        Entity entity01 = new Entity("Test1");
+
+        entity01.createComponent(MeshRemdererComponent.class);
+        entity01.getComponent(MeshRemdererComponent.class).setMesh(mesh);
 
         Scene scene = new Scene("TestScene", this);
-        scene.addEntity(entity);
+        scene.addEntity(entity01);
+
         currScene = scene;
+
+        camPos.addPos(0, 0, 10);
 
         while(isRunning) {
 

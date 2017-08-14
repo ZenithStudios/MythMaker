@@ -14,11 +14,8 @@ public class CameraComponent extends Component {
     public float fov = 70;
     public float nearplane = 0.01f, farplane = 100.0f;
 
-    public CameraComponent(float fov, float nearplane, float farplane) {
-        super();
-        this.fov = fov;
-        this.nearplane = nearplane;
-        this.farplane = farplane;
+    public CameraComponent(Entity entity) {
+        super(entity);
     }
 
     public Matrix4f getProjectionMatrix() {

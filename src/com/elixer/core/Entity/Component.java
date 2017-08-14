@@ -11,14 +11,12 @@ public abstract class Component {
 
     protected boolean isEnabled;
 
-    protected Component(){}
+    protected Component(Entity entity){
+        this.entity = entity;
+    }
 
     protected Entity getEntity() {
         return entity;
-    }
-
-    protected void setEntity(Entity entity) {
-        this.entity = entity;
     }
 
     protected ElixerGame getGame() {

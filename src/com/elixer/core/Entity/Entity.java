@@ -5,6 +5,8 @@ import com.elixer.core.Util.Logger;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 /**
@@ -12,7 +14,8 @@ import java.util.ArrayList;
  */
 public class Entity {
 
-    private Transform transform = new Transform();
+    public Transform transform = new Transform();
+
     private ArrayList<Component> components = new ArrayList<>();
     private Scene parentScene;
     private String name;
@@ -25,23 +28,8 @@ public class Entity {
         this.name = name;
     }
 
-    public void addComponent(Component component) {
-        component.setEntity(this);
-        components.add(component);
-    }
-
-    public void addPos(float x, float y, float z) {
-        transform.position.x += x;
-        transform.position.y += y;
-        transform.position.z += z;
-    }
-
-    public void addPos(Vector3f trans) {
-        transform.position.add(trans);
-    }
-
     //GETTERS
-    public <T extends Component> T getComponent(Class<? extends Component> type) {
+    public <T extends Component> T getComponent(Class<T> type) {
         for(Component c: components) {
             if(type.isInstance(c)) {
                 return (T) c;
@@ -49,6 +37,26 @@ public class Entity {
         }
 
         return null;
+    }
+
+    public <T extends Component> T createComponent(Class<T> type) {
+        T instance = null;
+
+        try {
+            Constructor<T> con = type.getConstructor(Entity.class);
+            instance = con.newInstance(this);
+            this.components.add(instance);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        return instance;
     }
 
     public ArrayList<Component> getComponents() {
@@ -72,18 +80,6 @@ public class Entity {
         return name;
     }
 
-    public Vector3f getPos() {
-        return transform.position;
-    }
-
-    public Vector3f getRotation() {
-        return transform.rotation;
-    }
-
-    public Vector3f getScale() {
-        return transform.scale;
-    }
-
     public Matrix4f getTransformationMatrix() { return transform.getTransformationMatrix(); }
 
     //SETTERS
@@ -95,33 +91,5 @@ public class Entity {
         this.parentScene = parentScene;
     }
 
-    public void setPos(float x, float y, float z) {
-        transform.position.x = x;
-        transform.position.y = y;
-        transform.position.z = z;
-    }
 
-    public void setPos(Vector3f trans) {
-        transform.position = trans;
-    }
-
-    public void setRot(float x, float y, float z) {
-        transform.rotation.x = x;
-        transform.rotation.y = y;
-        transform.rotation.z = z;
-    }
-
-    public void setRot(Vector3f rot) {
-        transform.rotation = rot;
-    }
-
-    public void setScale(float x, float y, float z) {
-        transform.scale.x = x;
-        transform.scale.y = y;
-        transform.scale.z = z;
-    }
-
-    public void setScale(Vector3f scale) {
-        transform.scale = scale;
-    }
 }
