@@ -33,7 +33,9 @@ public class MeshRemdererComponent extends Component {
     }
 
     public void setShaderProgram(ShaderProgram shaderProgram) {
-        shaderProgram.destroy();
+        if(shaderProgram != null)
+            shaderProgram.destroy();
+
         this.shaderProgram = shaderProgram;
     }
 
@@ -59,5 +61,7 @@ public class MeshRemdererComponent extends Component {
         for(int i = 0; i < mesh.getVBOAmount(); i++) {
             glDisableVertexAttribArray(i);
         }
+
+        glBindVertexArray(0);
     }
 }
