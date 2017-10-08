@@ -8,12 +8,12 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
-public class MeshRemdererComponent extends Component {
+public class MeshRendererComponent extends Component {
 
     private Mesh mesh;
     private ShaderProgram shaderProgram = new ShaderProgram("def/vertex.glsl","def/fragment.glsl");
 
-    public MeshRemdererComponent(Entity entity) {
+    public MeshRendererComponent(Entity entity) {
         super(entity);
     }
 

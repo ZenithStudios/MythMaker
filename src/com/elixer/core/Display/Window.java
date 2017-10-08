@@ -1,8 +1,11 @@
 package com.elixer.core.Display;
 
+import com.elixer.core.Util.Input;
 import com.elixer.core.Util.Logger;
 import com.elixer.core.Util.Util;
 import org.joml.Vector2i;
+import org.lwjgl.glfw.*;
+import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.glfw.GLFW.*;
 /**
@@ -33,6 +36,15 @@ public class Window {
             return;
         }
 
+        GLFWKeyCallback keyCallback = GLFWKeyCallback.create(Input.onKeyReference);
+        GLFWCursorPosCallback mousePosCallback = GLFWCursorPosCallback.create(Input.onMousePosReference);
+        GLFWMouseButtonCallback mouseButtonCallback = GLFWMouseButtonCallback.create(Input.onMouseClickReference);
+        GLFWWindowSizeCallback windowSizeCallback = GLFWWindowSizeCallback.create(this::onWindowResize);
+        glfwSetKeyCallback(windowID, keyCallback);
+        glfwSetCursorPosCallback(windowID, mousePosCallback);
+        glfwSetMouseButtonCallback(windowID, mouseButtonCallback);
+        glfwSetWindowSizeCallback(windowID, windowSizeCallback);
+
         glfwSetWindowPos(windowID, posX, posY);
 
         glfwMakeContextCurrent(windowID);
@@ -44,6 +56,17 @@ public class Window {
     public void update() {
         glfwSwapBuffers(windowID);
         glfwPollEvents();
+
+        GL11.glViewport(0, 0, width, height);
+    }
+
+    private void onWindowResize(long window, int width, int height) {
+        if(shouldResizeEvent) {
+            this.width = width;
+            this.height = height;
+
+            Logger.println(getWidth() + " | " + getHeight());
+        }
     }
 
     public boolean shouldWindowClose() {
@@ -56,5 +79,9 @@ public class Window {
 
     public int getHeight() {
         return height;
+    }
+
+    public long getWindowID() {
+        return windowID;
     }
 }
