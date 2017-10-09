@@ -16,7 +16,6 @@ public class Mesh {
     private ArrayList<Integer> vboIDs = new ArrayList<>();
 
     public Mesh(float[] data, int[] indecies) {
-
         startVAO(indecies);
         createVBO(data, 3);
         endVAO();

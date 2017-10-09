@@ -1,7 +1,8 @@
-package com.elixer.core.Entity;
+package com.elixer.core.Entity.Components;
 
 import com.elixer.core.Display.Model.Mesh;
 import com.elixer.core.Display.Shaders.ShaderProgram;
+import com.elixer.core.Entity.Entity;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;

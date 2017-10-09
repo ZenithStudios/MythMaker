@@ -1,6 +1,6 @@
-package com.elixer.core.Entity;
+package com.elixer.core.Entity.Components;
 
-import com.elixer.core.ElixerGame;
+import com.elixer.core.Entity.Entity;
 import com.elixer.core.Util.Logger;
 import org.joml.Matrix4f;
 

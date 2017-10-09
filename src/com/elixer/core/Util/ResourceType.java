@@ -7,6 +7,7 @@ import java.io.File;
  */
 public enum ResourceType {
     DATA("data", "dat", "txt", "csv"),
+    SCRIPT_LUA("scripts/lua", "lua"),
     SHADER("shaders", "glsl"),
     MODEL("models", "obj");
 

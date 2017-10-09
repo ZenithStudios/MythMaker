@@ -1,4 +1,4 @@
-package com.elixer.core.Util;
+package com.elixer.core.Input;
 
 import static org.lwjgl.glfw.GLFW.*;
 

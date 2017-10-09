@@ -1,9 +1,11 @@
 package com.elixer.core.Entity;
 
 import com.elixer.core.ElixerGame;
+import com.elixer.core.Entity.Components.Component;
 import com.elixer.core.Util.Logger;
+import com.elixer.core.Util.Luable;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
+import org.luaj.vm2.lib.BaseLib;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -26,6 +28,12 @@ public class Entity {
 
     public Entity(String name) {
         this.name = name;
+    }
+
+    public void onUpdate(){
+        for(Component comp: components) {
+            comp.onUpdate();
+        }
     }
 
     //GETTERS
@@ -90,6 +98,4 @@ public class Entity {
     public void setParentScene(Scene parentScene) {
         this.parentScene = parentScene;
     }
-
-
 }

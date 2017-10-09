@@ -1,10 +1,15 @@
 package com.elixer.core;
 
+import com.elixer.core.Input.Input;
 import com.elixer.core.Display.Model.Mesh;
 import com.elixer.core.Display.Window;
 import com.elixer.core.Entity.*;
+import com.elixer.core.Entity.Components.Component;
+import com.elixer.core.Entity.Components.MeshRendererComponent;
 import com.elixer.core.Util.*;
 import org.joml.Matrix4f;
+import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.lib.BaseLib;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
@@ -20,7 +25,7 @@ public abstract class ElixerGame {
 
     private float fov = 75f, nearPlane = 0.01f, farPlane = 1000f;
     private boolean isRunning;
-    private Scene currScene;
+    private Scene currScene = new Scene("default", this);
 
     public ElixerGame(String title) {
         this.title = title;
@@ -40,49 +45,34 @@ public abstract class ElixerGame {
     private void run() {
         isRunning = true;
         GL.createCapabilities();
+        glEnable(GL_DEPTH_TEST);
 
-        float[] data = new float[]
+        float[] data1 = new float[]
               {-1.0f, -1.0f, 0.0f,
                 1.0f, -1.0f, 0.0f,
                 0.0f,  1.0f, 0.0f};
-        int[] indecies = new int[]
+        int[] indecies1 = new int[]
               {2, 0, 1};
 
-        Mesh mesh = new Mesh(data, indecies);
+        Mesh triangle = new Mesh(data1, indecies1);
 
-        Entity entity01 = new Entity("Test1");
-        Entity entity02 = new Entity("Test2");
-        Entity entity03 = new Entity("Test3");
-        Entity entity04 = new Entity("Test4");
 
-        entity01.createComponent(MeshRendererComponent.class).setMesh(mesh);
-        entity02.createComponent(MeshRendererComponent.class).setMesh(mesh);
-        entity03.createComponent(MeshRendererComponent.class).setMesh(mesh);
-        entity04.createComponent(MeshRendererComponent.class).setMesh(mesh);
+        Entity entity1 = new Entity("Test1");
+        entity1.createComponent(MeshRendererComponent.class).setMesh(triangle);
+        entity1.transform.addPos(0,0,-10);
 
-        entity01.transform.addPos(0, 0, -3);
-        entity02.transform.addPos(0, 0, 3);
-        entity03.transform.addPos(3, 0, 0);
-        entity04.transform.addPos(-3, 0, 0);
+        Entity entity2 = new Entity("Test2");
+        entity2.createComponent(MeshRendererComponent.class).setMesh(triangle);
+        entity2.transform.addPos(0,0,-10);
+        entity1.transform.addRot(0,90,180);
 
-        entity03.transform.addRot(0, 90, 0);
-        entity04.transform.addRot(0, 90, 0);
-
-        Scene scene = new Scene("TestScene", this);
-        scene.addEntity(entity01);
-        scene.addEntity(entity02);
-        scene.addEntity(entity03);
-        scene.addEntity(entity04);
-
-        currScene = scene;
+        currScene.addEntity(entity1);
+        currScene.addEntity(entity2);
 
         while(isRunning) {
+
             Input.update();
-
-            Logger.println(Input.mouseState(MouseButton.LEFT, PressAction.DOWN));
-
             currWindow.update();
-
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             //Render Begin
@@ -113,6 +103,39 @@ public abstract class ElixerGame {
         onInit();
 
         onPostInit();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Timer gameTimer = new Timer();
+                gameTimer.mark();
+                int count = 0;
+                int frameCount = 0;
+
+                while(isRunning) {
+
+                    if(gameTimer.getDeltaTime() >= 1f/60f) {
+
+                        update();
+
+                        gameTimer.mark();
+                        count++;
+                    }
+
+                    if(gameTimer.getElapsedTime() - frameCount >= 1) {
+                        Logger.println(count, gameTimer.getElapsedTime());
+                        frameCount++;
+                        count = 0;
+                    }
+                }
+            }
+        }).start();
+    }
+
+    private void update() {
+        for(Entity entity: currScene.getEntities()) {
+            entity.onUpdate();
+        }
     }
 
     protected abstract void onPreInit();
@@ -152,5 +175,4 @@ public abstract class ElixerGame {
     public static Window getCurrWindow() {
         return currWindow;
     }
-
 }

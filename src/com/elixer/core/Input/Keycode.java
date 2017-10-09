@@ -1,6 +1,4 @@
-package com.elixer.core.Util;
-
-import org.omg.CORBA.UNKNOWN;
+package com.elixer.core.Input;
 
 import static org.lwjgl.glfw.GLFW.*;
 

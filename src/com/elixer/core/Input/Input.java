@@ -1,12 +1,10 @@
-package com.elixer.core.Util;
+package com.elixer.core.Input;
 
 import com.elixer.core.ElixerGame;
 import org.joml.Vector2d;
 import org.lwjgl.glfw.GLFWCursorPosCallbackI;
 import org.lwjgl.glfw.GLFWKeyCallbackI;
 import org.lwjgl.glfw.GLFWMouseButtonCallbackI;
-
-import java.util.ArrayList;
 
 /**
  * Created by aweso on 9/19/2017.

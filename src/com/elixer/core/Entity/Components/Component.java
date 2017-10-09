@@ -1,6 +1,7 @@
-package com.elixer.core.Entity;
+package com.elixer.core.Entity.Components;
 
 import com.elixer.core.ElixerGame;
+import com.elixer.core.Entity.Entity;
 
 /**
  * Created by aweso on 7/31/2017.

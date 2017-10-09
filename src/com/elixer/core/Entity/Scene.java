@@ -2,6 +2,8 @@ package com.elixer.core.Entity;
 
 import com.elixer.core.ElixerGame;
 import com.elixer.core.Util.Logger;
+import com.elixer.core.Util.Luable;
+import org.luaj.vm2.lib.BaseLib;
 
 import java.util.ArrayList;
 
@@ -43,4 +45,5 @@ public class Scene {
     public void setParrentgame(ElixerGame parrentgame) {
         this.parrentgame = parrentgame;
     }
+
 }
