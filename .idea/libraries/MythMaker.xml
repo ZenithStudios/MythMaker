@@ -3,12 +3,7 @@
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/Test Env/MythMaker.jar!/" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$PROJECT_DIR$/Test Env/MythMaker.jar!/" />
-    </JAVADOC>
-    <SOURCES>
-      <root url="jar://$PROJECT_DIR$/Test Env/MythMaker.jar!/" />
-      <root url="jar://$PROJECT_DIR$/Test Env/MythMaker.jar!/" />
-    </SOURCES>
+    <JAVADOC />
+    <SOURCES />
   </library>
 </component>

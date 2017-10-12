@@ -18,6 +18,11 @@ public class MeshRendererComponent extends Component {
         super(entity);
     }
 
+    public MeshRendererComponent(Entity entity, Mesh mesh) {
+        super(entity);
+        this.mesh = mesh;
+    }
+
     public Mesh getMesh() {
         return mesh;
     }

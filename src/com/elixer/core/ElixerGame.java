@@ -1,15 +1,13 @@
 package com.elixer.core;
 
+import com.elixer.core.Entity.Components.ScriptComponent;
 import com.elixer.core.Input.Input;
-import com.elixer.core.Display.Model.Mesh;
 import com.elixer.core.Display.Window;
 import com.elixer.core.Entity.*;
 import com.elixer.core.Entity.Components.Component;
 import com.elixer.core.Entity.Components.MeshRendererComponent;
 import com.elixer.core.Util.*;
 import org.joml.Matrix4f;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.BaseLib;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
@@ -32,7 +30,7 @@ public abstract class ElixerGame {
         initSystems();
     }
 
-    public void start() {
+    public void begin() {
         init();
         run();
         end();
@@ -43,32 +41,6 @@ public abstract class ElixerGame {
     }
 
     private void run() {
-        isRunning = true;
-        GL.createCapabilities();
-        glEnable(GL_DEPTH_TEST);
-
-        float[] data1 = new float[]
-              {-1.0f, -1.0f, 0.0f,
-                1.0f, -1.0f, 0.0f,
-                0.0f,  1.0f, 0.0f};
-        int[] indecies1 = new int[]
-              {2, 0, 1};
-
-        Mesh triangle = new Mesh(data1, indecies1);
-
-
-        Entity entity1 = new Entity("Test1");
-        entity1.createComponent(MeshRendererComponent.class).setMesh(triangle);
-        entity1.transform.addPos(0,0,-10);
-
-        Entity entity2 = new Entity("Test2");
-        entity2.createComponent(MeshRendererComponent.class).setMesh(triangle);
-        entity2.transform.addPos(0,0,-10);
-        entity1.transform.addRot(0,90,180);
-
-        currScene.addEntity(entity1);
-        currScene.addEntity(entity2);
-
         while(isRunning) {
 
             Input.update();
@@ -91,23 +63,26 @@ public abstract class ElixerGame {
 
     private void end() {
         onEnd();
-
         endSystems();
     }
 
     private void init() {
         currWindow = new Window(title);
 
-        onPreInit();
+        isRunning = true;
+        GL.createCapabilities();
+        glEnable(GL_DEPTH_TEST);
 
-        onInit();
+        currScene = instantiateScene();
 
-        onPostInit();
+        onPreStart();
+
+        start();
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Timer gameTimer = new Timer();
+                Timer gameTimer = Ref.gameTimer;
                 gameTimer.mark();
                 int count = 0;
                 int frameCount = 0;
@@ -123,7 +98,7 @@ public abstract class ElixerGame {
                     }
 
                     if(gameTimer.getElapsedTime() - frameCount >= 1) {
-                        Logger.println(count, gameTimer.getElapsedTime());
+                        Logger.println(count);
                         frameCount++;
                         count = 0;
                     }
@@ -138,11 +113,31 @@ public abstract class ElixerGame {
         }
     }
 
-    protected abstract void onPreInit();
+    private void start() {
+        onStart();
 
-    protected abstract void onPostInit();
+        for (Entity entity: currScene.getEntities()) {
+            for(Component component: entity.getComponents()) {
+                component.OnStart();
+            }
+        }
+    }
 
-    protected abstract void onInit();
+    private void prestart() {
+        onPreStart();
+
+        for (Entity entity: currScene.getEntities()) {
+            for(Component component: entity.getComponents()) {
+                component.OnStart();
+            }
+        }
+    }
+
+    protected abstract Scene instantiateScene();
+
+    protected abstract void onStart();
+
+    protected abstract void onPreStart();
 
     protected abstract void onEnd();
 
@@ -160,6 +155,10 @@ public abstract class ElixerGame {
 
     public Window getCurrentWindow() {
         return currWindow;
+    }
+
+    public Scene getCurrentScene() {
+        return currScene;
     }
 
     public Matrix4f getProjectionMatrix() {

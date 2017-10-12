@@ -67,8 +67,6 @@ public class Window {
         if(shouldResizeEvent) {
             this.width = width;
             this.height = height;
-
-            Logger.println(getWidth() + " | " + getHeight());
         }
     }
 

@@ -16,11 +16,11 @@ public abstract class Component {
         this.entity = entity;
     }
 
-    protected Entity getEntity() {
+    protected final Entity getEntity() {
         return entity;
     }
 
-    protected ElixerGame getGame() {
+    protected final ElixerGame getGame() {
         if(entity != null) {
             return entity.getGame();
         }
@@ -28,23 +28,23 @@ public abstract class Component {
         return null;
     }
 
-    public void onUpdate() {
+    public void onUpdate() {}
 
-    }
+    public void OnStart() {}
 
-    public void onRender(){
+    public void OnPreStart() {}
 
-    }
+    public void onRender(){}
 
-    public void disable() {
+    public final void disable() {
         isEnabled = false;
     }
 
-    public void enable() {
+    public final void enable() {
         isEnabled = true;
     }
 
-    public boolean isEnabled() {
+    public final boolean isEnabled() {
         return isEnabled;
     }
 }

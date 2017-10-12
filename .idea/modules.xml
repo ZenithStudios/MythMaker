@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MythMaker.iml" filepath="$PROJECT_DIR$/MythMaker.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Test Env/Test Env.iml" filepath="$PROJECT_DIR$/Test Env/Test Env.iml" />
     </modules>
   </component>
 </project>
