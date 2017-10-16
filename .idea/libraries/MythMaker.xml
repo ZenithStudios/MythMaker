@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="MythMaker">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Test Env/MythMaker.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

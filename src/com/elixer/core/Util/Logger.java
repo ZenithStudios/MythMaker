@@ -32,18 +32,27 @@ public class Logger {
         }
     }
 
-    public static void println(Object message, Levels level) {
+    public static void println(Levels level, Object... message) {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        level.getStream().println(level.getLevelText() + " " + sdf.format(cal.getTime()) + " | " + message);
+        level.getStream().print(level.getLevelText() + " " + sdf.format(cal.getTime()) + " | ");
+
+        if(message.length == 1) {
+            level.getStream().print(message[0]);
+        } else {
+            for(Object obj: message) {
+                level.getStream().print(obj + " | ");
+            }
+        }
+
+        level.getStream().println();
 
         if(level == Levels.ERROREND)
             System.exit(1);
     }
 
-    public static void println(Object message) {
-        println(message, Levels.INFO);
+    public static void println(Object... message) {
+        println(Levels.INFO, message);
     }
-
 
 }
