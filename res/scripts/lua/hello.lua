@@ -1,13 +1,5 @@
-count = 0
+require(Vectors)
 
 function onUpdate()
-    count = count + 1
-
-    if count == 180 then
-        print(count)
-    end
-end
-
-function onStart()
-
+    entity.transform:addRot(0, 0.5, 0)
 end

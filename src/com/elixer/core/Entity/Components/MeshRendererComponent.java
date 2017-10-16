@@ -3,6 +3,10 @@ package com.elixer.core.Entity.Components;
 import com.elixer.core.Display.Model.Mesh;
 import com.elixer.core.Display.Shaders.ShaderProgram;
 import com.elixer.core.Entity.Entity;
+import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.LuaValue;
+
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;

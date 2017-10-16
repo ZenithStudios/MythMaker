@@ -4,10 +4,11 @@ import com.elixer.core.Entity.Entity;
 import com.elixer.core.Util.Logger;
 import com.elixer.core.Util.ResourceType;
 import com.elixer.core.Util.Util;
-import org.luaj.vm2.LuaClosure;
-import org.luaj.vm2.LuaFunction;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.OneArgFunction;
+import org.luaj.vm2.*;
+import org.luaj.vm2.lib.VarArgFunction;
+import org.luaj.vm2.lib.ZeroArgFunction;
+import org.luaj.vm2.lib.jse.CoerceJavaToLua;
+import org.luaj.vm2.lib.jse.CoerceLuaToJava;
 
 import javax.script.*;
 import java.io.FileNotFoundException;
@@ -20,7 +21,7 @@ import java.util.HashMap;
  */
 public class ScriptComponent extends Component {
 
-    private String name;
+    private String scriptTitle;
 
     private ScriptEngineManager manager;
     private ScriptEngine engine;
@@ -37,20 +38,13 @@ public class ScriptComponent extends Component {
 
     public ScriptComponent(Entity entity, String name) {
         super(entity);
-        this.name = name;
+        this.scriptTitle = name;
 
         manager = new ScriptEngineManager();
         engine = manager.getEngineByName("luaj");
         mainBinding = engine.createBindings();
 
-        mainBinding.put("switch", new OneArgFunction() {
-            @Override
-            public LuaValue call(LuaValue arg) {
-                setScript(arg.tojstring(), mainBinding);
-                return NIL;
-            }
-        });
-
+        applyConstants();
         setScript(name, mainBinding);
     }
 
@@ -59,7 +53,12 @@ public class ScriptComponent extends Component {
         applyFields();
 
         if(script != null && onUpdate != null) {
-            onUpdate.call();
+            try {
+                onUpdate.call();
+            } catch (Exception e) {
+                this.disable();
+                Logger.println(Logger.Levels.ERROR, "Script runtime error: " + e.getMessage());
+            }
         }
 
         saveFields();
@@ -104,6 +103,25 @@ public class ScriptComponent extends Component {
         }
     }
 
+    private void applyConstants() {
+        mainBinding.put("Vectors", "com.elixer.core.Scripts.Vectors");
+        mainBinding.put("MeshRendererComponent", CoerceJavaToLua.coerce(MeshRendererComponent.class));
+
+        mainBinding.put("log", new VarArgFunction() {
+            @Override
+            public Varargs invoke(Varargs args) {
+                ArrayList<String> messages = new ArrayList<>();
+                for(int i = 1; i < args.narg()+1; i++) {
+                    messages.add(args.arg(i).tojstring());
+                }
+                Logger.println(messages.toArray(new String[messages.size()]));
+                return NIL;
+            }
+        });
+
+        mainBinding.put("entity", CoerceJavaToLua.coerce(getEntity()));
+    }
+
     private void setScript(String name, Bindings bindings) {
         try {
             script = ((Compilable)engine).compile(new FileReader(Util.getResource(name, ResourceType.SCRIPT_LUA).toFile()));
@@ -111,7 +129,7 @@ public class ScriptComponent extends Component {
         } catch (ScriptException e1) {
             Logger.println(Logger.Levels.ERROR, "Starting Error in script: " + e1.getMessage());
         } catch (FileNotFoundException e) {
-            Logger.println(Logger.Levels.ERROR, "Could not find script '" + this.name + "'.");
+            Logger.println(Logger.Levels.ERROR, "Could not find script '" + this.scriptTitle + "'.");
         }
 
         onUpdate = (LuaFunction) mainBinding.get("onUpdate");
@@ -119,5 +137,9 @@ public class ScriptComponent extends Component {
         onPreStart = (LuaFunction) mainBinding.get("onPreStart");
 
         saveFields();
+    }
+
+    public String getScriptTitle() {
+        return scriptTitle;
     }
 }

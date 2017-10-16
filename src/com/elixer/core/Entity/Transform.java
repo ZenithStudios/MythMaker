@@ -1,10 +1,14 @@
 package com.elixer.core.Entity;
 
+import com.elixer.core.Util.Luable;
 import com.elixer.core.Util.Ref;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.lib.ThreeArgFunction;
 
-public class Transform {
+public class Transform implements Luable{
 
     public Vector3f position = new Vector3f(0, 0,0);
     public Vector3f scale = new Vector3f(1, 1, 1);
@@ -106,5 +110,29 @@ public class Transform {
 
     public Vector3f getRotation() {
         return rotation;
+    }
+
+    @Override
+    public LuaTable toLua() {
+        Transform transform = this;
+        LuaTable table = LuaValue.tableOf();
+
+        table.set("addRot", new ThreeArgFunction() {
+            @Override
+            public LuaValue call(LuaValue arg1, LuaValue arg2, LuaValue arg3) {
+                transform.addRot(arg1.tofloat(), arg2.tofloat(), arg3.tofloat());
+                return NIL;
+            }
+        });
+
+        table.set("setPos", new ThreeArgFunction() {
+            @Override
+            public LuaValue call(LuaValue arg1, LuaValue arg2, LuaValue arg3) {
+                transform.setPos(arg1.tofloat(), arg2.tofloat(), arg3.tofloat());
+                return NIL;
+            }
+        });
+
+        return table;
     }
 }

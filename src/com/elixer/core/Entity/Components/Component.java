@@ -2,6 +2,7 @@ package com.elixer.core.Entity.Components;
 
 import com.elixer.core.ElixerGame;
 import com.elixer.core.Entity.Entity;
+import com.elixer.core.Util.Luable;
 
 /**
  * Created by aweso on 7/31/2017.
@@ -10,7 +11,7 @@ public abstract class Component {
 
     private Entity entity;
 
-    protected boolean isEnabled;
+    protected boolean isEnabled = true;
 
     protected Component(Entity entity){
         this.entity = entity;

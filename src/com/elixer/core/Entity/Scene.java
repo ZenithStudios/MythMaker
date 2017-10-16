@@ -3,6 +3,8 @@ package com.elixer.core.Entity;
 import com.elixer.core.ElixerGame;
 import com.elixer.core.Util.Logger;
 import com.elixer.core.Util.Luable;
+import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.BaseLib;
 
 import java.util.ArrayList;
@@ -46,4 +48,15 @@ public class Scene {
         this.parrentgame = parrentgame;
     }
 
+
+    public LuaTable getSceneState() {
+        LuaTable table = LuaValue.tableOf();
+
+        int count = 0;
+        for(Entity entity: entities) {
+            table.set(count, entity.toLua());
+        }
+
+        return table;
+    }
 }

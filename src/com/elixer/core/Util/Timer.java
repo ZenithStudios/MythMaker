@@ -11,7 +11,6 @@ public class Timer {
     private double lastMark = -1;
 
     public Timer() {
-        Logger.println("timer start");
         startTime = glfwGetTime();
     }
 

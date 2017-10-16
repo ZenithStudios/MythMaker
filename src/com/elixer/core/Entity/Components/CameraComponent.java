@@ -3,6 +3,8 @@ package com.elixer.core.Entity.Components;
 import com.elixer.core.Entity.Entity;
 import com.elixer.core.Util.Logger;
 import org.joml.Matrix4f;
+import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.LuaValue;
 
 /**
  * Created by aweso on 7/31/2017.

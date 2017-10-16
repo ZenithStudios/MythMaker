@@ -24,7 +24,7 @@ public class EngineTest extends ElixerGame {
     protected Scene instantiateScene() {
         Scene scene = new Scene("Test", this);
 
-        Entity triangle1 = new Entity();
+        Entity triangle1 = new Entity("Entity1");
         triangle1.createComponent(MeshRendererComponent.class, Primitives.triangle);
         triangle1.createComponent(ScriptComponent.class, "hello.lua");
         triangle1.transform.addPos(0,0, -10f);
@@ -36,7 +36,7 @@ public class EngineTest extends ElixerGame {
 
     @Override
     protected void onStart() {
-
+        //Util.makeLuaObject(new Test());
     }
 
     @Override

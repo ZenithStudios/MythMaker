@@ -5,7 +5,13 @@ import com.elixer.core.Entity.Components.Component;
 import com.elixer.core.Util.Logger;
 import com.elixer.core.Util.Luable;
 import org.joml.Matrix4f;
+import org.luaj.vm2.LuaString;
+import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.BaseLib;
+import org.luaj.vm2.lib.OneArgFunction;
+import org.luaj.vm2.lib.TwoArgFunction;
+import org.luaj.vm2.lib.ZeroArgFunction;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -16,7 +22,7 @@ import java.util.function.Consumer;
 /**
  * Created by aweso on 7/31/2017.
  */
-public class Entity {
+public class Entity implements Luable{
 
     public Transform transform = new Transform();
 
@@ -33,10 +39,10 @@ public class Entity {
     }
 
     public void onUpdate(){
-        transform.addRot(0, 1, 0);
 
         for(Component comp: components) {
-            comp.onUpdate();
+            if(comp.isEnabled())
+                comp.onUpdate();
         }
     }
 
@@ -157,5 +163,29 @@ public class Entity {
 
     public void setParentScene(Scene parentScene) {
         this.parentScene = parentScene;
+    }
+
+    @Override
+    public LuaTable toLua() {
+        Entity entity = this;
+        LuaTable object = LuaValue.tableOf();
+
+        object.set("getName", new ZeroArgFunction() {
+            @Override
+            public LuaValue call() {
+                return LuaValue.valueOf(entity.getName());
+            }
+        });
+
+        object.set("getComponent", new OneArgFunction() {
+            @Override
+            public LuaValue call(LuaValue arg) {
+                return NIL;
+            }
+        });
+
+        object.set("transform", transform.toLua());
+
+        return object;
     }
 }
