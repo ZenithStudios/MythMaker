@@ -5,6 +5,7 @@ import com.elixer.core.Util.Logger;
 import com.elixer.core.Util.ResourceType;
 import com.elixer.core.Util.Util;
 import org.luaj.vm2.*;
+import org.luaj.vm2.lib.ThreeArgFunction;
 import org.luaj.vm2.lib.VarArgFunction;
 import org.luaj.vm2.lib.ZeroArgFunction;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
@@ -65,7 +66,7 @@ public class ScriptComponent extends Component {
     }
 
     @Override
-    public void OnStart() {
+    public void onStart() {
         applyFields();
 
         if(script != null && onStart != null) {
@@ -76,7 +77,7 @@ public class ScriptComponent extends Component {
     }
 
     @Override
-    public void OnPreStart() {
+    public void onPreStart() {
         applyFields();
 
         if(script != null && onPreStart != null) {
@@ -104,8 +105,15 @@ public class ScriptComponent extends Component {
     }
 
     private void applyConstants() {
-        mainBinding.put("Vectors", "com.elixer.core.Scripts.Vectors");
+        mainBinding.put("ElixerScript", "com.elixer.core.Scripts.ElixerScript");
         mainBinding.put("MeshRendererComponent", CoerceJavaToLua.coerce(MeshRendererComponent.class));
+
+        mainBinding.put("clamp", new ThreeArgFunction() {
+            @Override
+            public LuaValue call(LuaValue arg1, LuaValue arg2, LuaValue arg3) {
+                return LuaValue.valueOf(Util.clampi(arg1.toint(), arg2.toint(), arg3.toint()));
+            }
+        });
 
         mainBinding.put("log", new VarArgFunction() {
             @Override

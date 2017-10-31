@@ -1,8 +1,12 @@
 package com.elixer.core.Display.Model;
 
 import com.elixer.core.Util.Util;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector3i;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -12,51 +16,38 @@ import static org.lwjgl.opengl.GL40.*;
 
 public class Mesh {
 
-    private int vaoID;
-    private ArrayList<Integer> vboIDs = new ArrayList<>();
+    private ArrayList<Vertex> verts = new ArrayList<>();
+    private ArrayList<Face> faces = new ArrayList<>();
 
-    public Mesh(float[] data, int[] indecies) {
-        startVAO(indecies);
-        createVBO(data, 3);
-        endVAO();
+    public Mesh addVertex(Vertex... v) {
+        verts.addAll(Arrays.asList(v));
+        return this;
     }
 
-    private void startVAO(int[] indecies) {
-        vaoID = glGenVertexArrays();
-        glBindVertexArray(vaoID);
-
-        int indexBuffer = glGenBuffers();
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, Util.getIntBuffer(indecies), GL_STATIC_DRAW);
+    public Mesh addVertex(float x, float y, float z, float u, float v, float xn, float yn, float zn) {
+        verts.add(new Vertex(x, y, z, u, v, xn, yn, zn));
+        return this;
     }
 
-    private void createVBO(float[] data, int groupsOf) {
-        int vboID = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, vboID);
-
-        glBufferData(GL_ARRAY_BUFFER, Util.getFloatBuffer(data), GL_STATIC_DRAW);
-        glVertexAttribPointer(vboIDs.size(), groupsOf, GL_FLOAT, false, 0, 0);
-        vboIDs.add(vboID);
+    public Mesh addFace(Face face) {
+        faces.add(face);
+        return this;
     }
 
-    private void endVAO() {
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
+    public Mesh addFace(int vert1, int vert2, int vert3, int textureIndex) {
+        faces.add(new Face(vert1, vert2, vert3, textureIndex));
+        return this;
     }
 
-    public void destroy() {
-        for(int i: vboIDs) {
-            glDeleteBuffers(i);
-        }
-
-        glDeleteVertexArrays(vaoID);
+    public ArrayList<Vertex> getVerts() {
+        return verts;
     }
 
-    public int getVBOAmount() {
-        return  vboIDs.size();
+    public ArrayList<Face> getFaces() {
+        return faces;
     }
 
-    public int getVaoID() {
-        return vaoID;
+    public int getFaceCount() {
+        return faces.size();
     }
 }

@@ -4,6 +4,8 @@ import com.elixer.core.Util.Logger;
 import com.elixer.core.Util.ResourceType;
 import com.elixer.core.Util.Util;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.joml.Vector2i;
 import org.lwjgl.BufferUtils;
 
 import java.io.BufferedReader;
@@ -92,6 +94,14 @@ public class ShaderProgram {
 
     public void setUniform(String name, Matrix4f mat) {
         glUniformMatrix4fv(glGetUniformLocation(programID, name), false, mat.get(matrixBuffer));
+    }
+
+    public void setUniform(String name, Vector2i vector) {
+        glUniform2i(glGetUniformLocation(programID, name), vector.x, vector.y);
+    }
+
+    public void setUniform(String name, Vector2f vec) {
+        glUniform2f(glGetUniformLocation(programID, name), vec.x, vec.y);
     }
 
     public void destroy() {

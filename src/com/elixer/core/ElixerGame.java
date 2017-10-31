@@ -1,11 +1,9 @@
 package com.elixer.core;
 
-import com.elixer.core.Entity.Components.ScriptComponent;
 import com.elixer.core.Input.Input;
 import com.elixer.core.Display.Window;
 import com.elixer.core.Entity.*;
 import com.elixer.core.Entity.Components.Component;
-import com.elixer.core.Entity.Components.MeshRendererComponent;
 import com.elixer.core.Util.*;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL;
@@ -118,7 +116,7 @@ public abstract class ElixerGame {
 
         for (Entity entity: currScene.getEntities()) {
             for(Component component: entity.getComponents()) {
-                component.OnStart();
+                component.onStart();
             }
         }
     }
@@ -128,7 +126,7 @@ public abstract class ElixerGame {
 
         for (Entity entity: currScene.getEntities()) {
             for(Component component: entity.getComponents()) {
-                component.OnStart();
+                component.onStart();
             }
         }
     }

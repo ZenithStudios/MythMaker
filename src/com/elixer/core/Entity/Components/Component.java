@@ -31,9 +31,11 @@ public abstract class Component {
 
     public void onUpdate() {}
 
-    public void OnStart() {}
+    public void onStart() {}
 
-    public void OnPreStart() {}
+    public void onPreStart() {}
+
+    public void onEnd() {};
 
     public void onRender(){}
 

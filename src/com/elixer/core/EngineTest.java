@@ -1,10 +1,15 @@
 package com.elixer.core;
 
+import com.elixer.core.Display.Model.Model;
+import com.elixer.core.Display.Textures.Texture;
 import com.elixer.core.Entity.Components.MeshRendererComponent;
 import com.elixer.core.Entity.Components.ScriptComponent;
 import com.elixer.core.Entity.Entity;
 import com.elixer.core.Entity.Scene;
+import com.elixer.core.Util.Logger;
 import com.elixer.core.Util.Primitives;
+
+import java.util.Arrays;
 
 /**
  * Created by aweso on 7/31/2017.
@@ -24,12 +29,12 @@ public class EngineTest extends ElixerGame {
     protected Scene instantiateScene() {
         Scene scene = new Scene("Test", this);
 
-        Entity triangle1 = new Entity("Entity1");
-        triangle1.createComponent(MeshRendererComponent.class, Primitives.triangle);
-        triangle1.createComponent(ScriptComponent.class, "hello.lua");
-        triangle1.transform.addPos(0,0, -10f);
+        Entity tri01 = new Entity("tri2");
+        tri01.createComponent(MeshRendererComponent.class, new Model(Primitives.triangle, new Texture("bench.png", 2, 2, 0)));
+        tri01.createComponent(ScriptComponent.class, "Rotate.lua");
+        tri01.transform.addPos(0, 0, -10);
 
-        scene.addEntity(triangle1);
+        scene.addEntity(tri01);
 
         return scene;
     }
