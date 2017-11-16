@@ -70,7 +70,7 @@ public class Util {
 
     public static Path getResource(String fileName, ResourceType type) {
         if(!type.legal(fileName)) {
-            Logger.println("File extention not supported: ." + fileName.split("\\.")[1] + "  Skipping Resource and returning null.");
+            Logger.println("File extention not supported: ." + fileName.split("\\.")[0] + "  Skipping Resource and returning null.");
             return null;
         }
 

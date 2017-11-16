@@ -8,23 +8,16 @@ import org.joml.Vector3i;
 public class Face {
 
     private Vector3i vert;
-    private int textureIndex;
 
-    public Face(Vector3i verts, int textureIndex) {
+    public Face(Vector3i verts) {
         this.vert = verts;
-        this.textureIndex = textureIndex;
     }
 
-    public Face(int vert1, int vert2, int vert3, int textureIndex) {
+    public Face(int vert1, int vert2, int vert3) {
         this.vert = new Vector3i(vert1, vert2, vert3);
-        this.textureIndex = textureIndex;
     }
 
     public Vector3i getVert() {
         return vert;
-    }
-
-    public int getTextureIndex() {
-        return textureIndex;
     }
 }

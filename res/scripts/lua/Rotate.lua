@@ -1,7 +1,4 @@
-model = entity:getComponent(MeshRendererComponent):getModel()
-
 function onUpdate()
-    model:incrementTextureIndex()
-    entity.transform:addRot(0, -0.5, 0)
+    entity.transform:addRot(0, 1, 0)
 end
 

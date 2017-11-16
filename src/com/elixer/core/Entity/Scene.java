@@ -1,13 +1,12 @@
 package com.elixer.core.Entity;
 
+import com.elixer.core.Display.Renderable;
 import com.elixer.core.ElixerGame;
+import com.elixer.core.Entity.Components.Component;
 import com.elixer.core.Util.Logger;
-import com.elixer.core.Util.Luable;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.BaseLib;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by aweso on 8/9/2017.
@@ -18,14 +17,25 @@ public class Scene {
     private String name;
     private ElixerGame parrentgame;
 
+    private ArrayList<Component> renderList = new ArrayList<>();
+
     public Scene(String name, ElixerGame parrentgame) {
         this.name = name;
         this.parrentgame = parrentgame;
+
+
     }
 
-    public void addEntity(Entity entity) {
-        entity.setParentScene(this);
-        entities.add(entity);
+    public void addEntity(Entity... entities) {
+        for(Entity entity: entities) {
+            for(Component component: entity.getComponents()) {
+                if(component instanceof Renderable) {
+                    addRenderComponent(component);
+                }
+            }
+            entity.setParentScene(this);
+            this.entities.add(entity);
+        }
     }
 
     public Entity getEntity(int index) {
@@ -48,15 +58,14 @@ public class Scene {
         this.parrentgame = parrentgame;
     }
 
-
-    public LuaTable getSceneState() {
-        LuaTable table = LuaValue.tableOf();
-
-        int count = 0;
-        for(Entity entity: entities) {
-            table.set(count, entity.toLua());
+    public void renderScene() {
+        for(Component comp: renderList) {
+            if(comp instanceof Renderable)
+                ((Renderable) comp).render();
         }
+    }
 
-        return table;
+    private void addRenderComponent(Component component) {
+        renderList.add(component);
     }
 }

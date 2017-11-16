@@ -69,13 +69,13 @@ public class Texture {
     }
 
     private void updateTexture() {
-        ByteBuffer buffer = BufferUtils.createByteBuffer(width*height*4);
+        ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
 
-        for(int i = 0; i < pixelData.length; i++) {
-            buffer.put((byte)((pixelData[i] >> 16) & 0xFF));
-            buffer.put((byte)((pixelData[i] >> 8) & 0xFF));
-            buffer.put((byte)((pixelData[i] >> 0) & 0xFF));
-            buffer.put((byte)((pixelData[i] >> 24) & 0xFF));
+        for (int i = 0; i < pixelData.length; i++) {
+            buffer.put((byte) ((pixelData[i] >> 16) & 0xFF));
+            buffer.put((byte) ((pixelData[i] >> 8) & 0xFF));
+            buffer.put((byte) ((pixelData[i] >> 0) & 0xFF));
+            buffer.put((byte) ((pixelData[i] >> 24) & 0xFF));
         }
 
         buffer.flip();
@@ -91,38 +91,38 @@ public class Texture {
     }
 
     private Vector2i getGlobalTexturePos(int x, int y, int i) {
-        int rowHeight = height/rows;
-        int colWidth = width/columns;
+        int rowHeight = height / rows;
+        int colWidth = width / columns;
 
         int column = i % columns;
         int row = Math.floorDiv(i, rows);
 
-        return new Vector2i(Util.clampi(x+(column*colWidth)+(column*spacing), 0, colWidth),
-                Util.clampi(y+(row*rowHeight)+(row*spacing), 0, rowHeight));
+        return new Vector2i(Util.clampi(x + (column * colWidth) + (column * spacing), 0, colWidth),
+                Util.clampi(y + (row * rowHeight) + (row * spacing), 0, rowHeight));
+    }
+
+    private Vector4i getUV(int index) {
+        return null;
     }
 
     public Vector2i getIndexRowCol(int i) {
 
         int column = i % columns;
-        int row = Math.floorDiv(i, rows);
+        int row = Math.floorDiv(i, columns);
 
         return new Vector2i(column, row);
     }
 
     public int getColWidth() {
-        return getWidth()/columns;
+        return getWidth() / columns;
     }
 
     public int getRowHeight() {
-        return getHeight()/rows;
+        return getHeight() / rows;
     }
 
     public int getTexturesCount() {
-        return (columns*rows);
-    }
-
-    private Vector4i getUV(int index) {
-        return null;
+        return (columns * rows);
     }
 
     public int getTextureID() {
@@ -147,5 +147,25 @@ public class Texture {
 
     public int getSpacing() {
         return spacing;
+    }
+
+    public Vector2f getTextureOffset(int textureIndex) {
+        Vector2i index = getIndexRowCol(textureIndex);
+
+        float xOffset = ((float)getColWidth()/(float)getWidth()) * index.x;
+        float yOffset = ((float)getRowHeight()/(float)getHeight()) * index.y;
+        return new Vector2f(xOffset, yOffset);
+    }
+
+    public float[] getAllTextureOffsets() {
+        float data[] = new float[getTexturesCount()*2];
+
+        for(int i = 0; i < getTexturesCount(); i++) {
+            Vector2f offset = getTextureOffset(i);
+            data[(i*2)] = offset.x;
+            data[(i*2)+1] = offset.y;
+        }
+
+        return data;
     }
 }
