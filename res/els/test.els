@@ -1,0 +1,32 @@
+//<- commenting string
+
+//Descriptive lines
+<?ejs version="1.0"/>
+<GridPane id="grd01" width="fit" height="fit" rows=3 columns=3>
+    //Lua script interjection
+    <! for y=0, grd01.rows, 1 do
+            for x=0, grd01.columns, 1 do/>
+    <Button id="<!x/><!y/>button" alignment="center" minWidth=100 minHeight=30 column=<!x/> row=<!y/> />
+    <!      end
+       end                              />
+</GridPane>
+
+//copies everything from one file and puts it here
+<?include="default.els">
+
+<! setCallback("00button", function event() print("This is the first button") end) />
+
+<$
+GridPane.id="grd01"{
+    color: blue;
+}
+
+Button:hover {
+    lighten: 5;
+}
+/>
+
+// This example makes is a template for a grid pane with 9 buttons, one in each grid.
+// <? /> gives the engine information or specific commands
+// <! /> this is lua scripts. helps add dynnamic behavior to scripts
+// <$ /> styling info, probably written in css or something simular looking.

@@ -4,7 +4,11 @@ import com.elixer.core.Util.Logger;
 import com.elixer.core.Util.ResourceType;
 import com.elixer.core.Util.Util;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.joml.Vector2i;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
+import sun.security.provider.SHA;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -24,7 +28,7 @@ public class ShaderProgram {
 
     private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
-    public static enum ShaderType {
+    public enum ShaderType {
         FRAGMENT(GL_FRAGMENT_SHADER),
         VERTEX(GL_VERTEX_SHADER),
         GEOMETERY(GL_GEOMETRY_SHADER);
@@ -47,8 +51,21 @@ public class ShaderProgram {
         glLinkProgram(programID);
 
         if(glGetProgrami(programID, GL_LINK_STATUS) == GL_FALSE) {
-            Logger.println("Shader Program Link Error: ", Logger.Levels.ERROR);
-            Logger.println(glGetProgramInfoLog(programID), Logger.Levels.ERROREND);
+            Logger.println(Logger.Levels.ERROR, "Shader Program Link Error: ");
+            Logger.println(Logger.Levels.ERROREND, glGetProgramInfoLog(programID), Logger.Levels.ERROREND);
+        }
+    }
+
+    public ShaderProgram(String vertexShaderFile, String geometryShaderFile, String fragmentShaderFile) {
+        programID = glCreateProgram();
+        getShader(vertexShaderFile, ShaderType.VERTEX);
+        getShader(geometryShaderFile, ShaderType.GEOMETERY);
+        getShader(fragmentShaderFile, ShaderType.FRAGMENT);
+        glLinkProgram(programID);
+
+        if(glGetProgrami(programID, GL_LINK_STATUS) == GL_FALSE) {
+            Logger.println(Logger.Levels.ERROR, "Shader Program Link Error: ");
+            Logger.println(Logger.Levels.ERROREND, glGetProgramInfoLog(programID), Logger.Levels.ERROREND);
         }
     }
 
@@ -71,7 +88,7 @@ public class ShaderProgram {
 
         if(glGetShaderi(shader, GL_COMPILE_STATUS)==GL_FALSE) {
             Logger.println("Shader Compile Error:", Logger.Levels.ERROR);
-            Logger.println(glGetShaderInfoLog(shader, 500), Logger.Levels.ERROREND);
+            Logger.println(Logger.Levels.ERROREND, glGetShaderInfoLog(shader, 500));
         }
 
         glAttachShader(programID, shader);
@@ -90,8 +107,24 @@ public class ShaderProgram {
         glUniform1d(glGetUniformLocation(programID, name), value);
     }
 
+    public void setUniform(String name, float[] value) {
+        glUniform2fv(glGetUniformLocation(programID, name), value);
+    }
+
     public void setUniform(String name, Matrix4f mat) {
         glUniformMatrix4fv(glGetUniformLocation(programID, name), false, mat.get(matrixBuffer));
+    }
+
+    public void setUniform(String name, Vector2i vector) {
+        glUniform2i(glGetUniformLocation(programID, name), vector.x, vector.y);
+    }
+
+    public void setUniform(String name, Vector2f vec) {
+        glUniform2f(glGetUniformLocation(programID, name), vec.x, vec.y);
+    }
+
+    public void setUniform(String name, Vector4f vec) {
+        glUniform4f(glGetUniformLocation(programID, name), vec.x, vec.y, vec.z, vec.w);
     }
 
     public void destroy() {

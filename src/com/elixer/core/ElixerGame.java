@@ -1,11 +1,10 @@
 package com.elixer.core;
 
-import com.elixer.core.Entity.Components.ScriptComponent;
+import com.elixer.core.Display.Renderable;
 import com.elixer.core.Input.Input;
 import com.elixer.core.Display.Window;
 import com.elixer.core.Entity.*;
 import com.elixer.core.Entity.Components.Component;
-import com.elixer.core.Entity.Components.MeshRendererComponent;
 import com.elixer.core.Util.*;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL;
@@ -48,11 +47,7 @@ public abstract class ElixerGame {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             //Render Begin
-            for(Entity e: currScene.getEntities()) {
-                for (Component c : e.getComponents()) {
-                    c.onRender();
-                }
-            }
+            currScene.renderScene();
             //Render End
 
             if(currWindow.shouldWindowClose()) {
@@ -72,10 +67,16 @@ public abstract class ElixerGame {
         isRunning = true;
         GL.createCapabilities();
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_POINT_SIZE);
+        glEnable(GL_BLEND);
+        glEnable(GL_COLOR_MATERIAL);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
         currScene = instantiateScene();
+        currWindow.setIcon("icons/icon1.png");
 
-        onPreStart();
+        prestart();
 
         start();
 
@@ -118,7 +119,7 @@ public abstract class ElixerGame {
 
         for (Entity entity: currScene.getEntities()) {
             for(Component component: entity.getComponents()) {
-                component.OnStart();
+                component.onStart();
             }
         }
     }
@@ -128,7 +129,7 @@ public abstract class ElixerGame {
 
         for (Entity entity: currScene.getEntities()) {
             for(Component component: entity.getComponents()) {
-                component.OnStart();
+                component.onStart();
             }
         }
     }
@@ -169,6 +170,12 @@ public abstract class ElixerGame {
             nearPlane,
             farPlane);
         return matProxy;
+    }
+
+    public Matrix4f getOrthoMatrix() {
+        Matrix4f matrix4f = new Matrix4f().identity();
+        matrix4f.setOrtho(-((float)currWindow.getWidth()/2), ((float)currWindow.getWidth()/2), -((float)currWindow.getHeight()/2), ((float)currWindow.getHeight()/2), this.nearPlane, this.farPlane);
+        return matrix4f;
     }
 
     public static Window getCurrWindow() {

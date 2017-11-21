@@ -1,8 +1,10 @@
 package com.elixer.core.Entity.Components;
 
+import com.elixer.core.Display.Renderable;
 import com.elixer.core.ElixerGame;
 import com.elixer.core.Entity.Entity;
-import com.elixer.core.Util.Luable;
+import com.elixer.core.Util.Logger;
+import com.sun.org.apache.regexp.internal.RE;
 
 /**
  * Created by aweso on 7/31/2017.
@@ -17,7 +19,7 @@ public abstract class Component {
         this.entity = entity;
     }
 
-    protected final Entity getEntity() {
+    public final Entity getEntity() {
         return entity;
     }
 
@@ -31,9 +33,11 @@ public abstract class Component {
 
     public void onUpdate() {}
 
-    public void OnStart() {}
+    public void onStart() {}
 
-    public void OnPreStart() {}
+    public void onPreStart() {}
+
+    public void onEnd() {};
 
     public void onRender(){}
 

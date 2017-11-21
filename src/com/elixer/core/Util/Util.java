@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.file.Path;
@@ -60,9 +61,16 @@ public class Util {
         return buffer;
     }
 
+    public static ByteBuffer getByteBuffer(byte[] data) {
+        ByteBuffer buffer = BufferUtils.createByteBuffer(data.length);
+        buffer.put(data);
+        buffer.flip();
+        return buffer;
+    }
+
     public static Path getResource(String fileName, ResourceType type) {
         if(!type.legal(fileName)) {
-            Logger.println("File extention not supported: ." + fileName.split("\\.")[1] + "  Skipping Resource and returning null.");
+            Logger.println("File extention not supported: ." + fileName.split("\\.")[0] + "  Skipping Resource and returning null.");
             return null;
         }
 
@@ -74,5 +82,15 @@ public class Util {
         }
 
         return path;
+    }
+
+    public static int clampi(int value, int min, int max) {
+        if(value < min) {
+            return min;
+        } else if(value > max) {
+            return max;
+        }
+
+        return value;
     }
 }

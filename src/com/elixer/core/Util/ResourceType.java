@@ -9,7 +9,8 @@ public enum ResourceType {
     DATA("data", "dat", "txt", "csv"),
     SCRIPT_LUA("scripts/lua", "lua"),
     SHADER("shaders", "glsl"),
-    MODEL("models", "obj");
+    MODEL("models", "obj"),
+    TEXTURE("textures", "png", "jpeg");
 
     private String dir;
     private String[] extentions;
